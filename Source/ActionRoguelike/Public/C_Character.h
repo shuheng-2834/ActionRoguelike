@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UHInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API AC_Character : public ACharacter
@@ -17,8 +18,13 @@ class ACTIONROGUELIKE_API AC_Character : public ACharacter
 
 protected:
 	// 指定生成的类型
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere,Category="Attack")
+	UAnimMontage* AttackMontage;
+
+	FTimerHandle TimerHandle;
 
 public:
 	// Sets default values for this character's properties
@@ -42,6 +48,8 @@ protected:
 	void MoveRight(float X);
 	void PrimaryAttack();
 	void PrimaryInteract();
+	void PrimaryAttack_TimeElapsed();
+
 
 public:	
 	// Called every frame

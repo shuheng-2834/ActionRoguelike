@@ -62,16 +62,12 @@ void AC_Character::MoveRight(float X)
 
 void AC_Character::PrimaryAttack()
 {
-	// 获取骨架，再获取骨架上炮口的位置
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	// 播放动画
+	PlayAnimMontage(AttackMontage);
 
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-
-	FActorSpawnParameters SpawnParams;
-	// 设置碰撞处理方式为始终生成
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	UE_LOG(LogTemp, Warning, TEXT("Hand: %s"), *HandLocation.ToString())
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AC_Character::PrimaryAttack_TimeElapsed, 0.2f);
+	// 角色死亡,清空定时器
+	// GetWorldTimerManager().ClearTimer(TimerHandle);
 }
 
 void AC_Character::PrimaryInteract()
@@ -80,6 +76,19 @@ void AC_Character::PrimaryInteract()
 	{
 		InteractionComponent->PrimaryInteract();
 	}
+}
+
+void AC_Character::PrimaryAttack_TimeElapsed()
+{
+	// 获取骨架，再获取骨架上炮口的位置
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	FActorSpawnParameters SpawnParams;
+	// 设置碰撞处理方式为始终生成
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
 
 // Called every frame
