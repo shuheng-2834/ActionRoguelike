@@ -3,6 +3,7 @@
 
 #include "C_Character.h"
 
+#include "A_MagicProjectile.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -14,6 +15,7 @@ AC_Character::AC_Character()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	// 使用控制器旋转，
 	SpringArm->bUsePawnControlRotation = true;
 	// 将弹簧臂组件附加到根组件里面
 	SpringArm->SetupAttachment(RootComponent);
@@ -22,7 +24,7 @@ AC_Character::AC_Character()
 	// 将摄像机组件附加到弹簧臂组件里面
 	Camera->SetupAttachment(SpringArm);
 
-	// 设置朝向运行为真
+	// 设置角色的移动方式
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 }
@@ -31,7 +33,6 @@ AC_Character::AC_Character()
 void AC_Character::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AC_Character::MoveForward(float X)
@@ -56,6 +57,20 @@ void AC_Character::MoveRight(float X)
 	AddMovementInput(RightVector, X);
 }
 
+void AC_Character::PrimaryAttack()
+{
+	// 获取骨架，再获取骨架上炮口的位置
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	FActorSpawnParameters SpawnParams;
+	// 设置碰撞处理方式为始终生成
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	UE_LOG(LogTemp, Warning, TEXT("Hand: %s"), *HandLocation.ToString())
+	GetWorld()->SpawnActor<AActor>(ProjectileClass,SpawnTM, SpawnParams);
+}
+
 // Called every frame
 void AC_Character::Tick(float DeltaTime)
 {
@@ -70,9 +85,10 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_Character::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AC_Character::AddControllerYawInput);
-
 	PlayerInputComponent->BindAxis("LookUp", this, &AC_Character::AddControllerPitchInput);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AC_Character::Jump);
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AC_Character::PrimaryAttack);
 }
 
   

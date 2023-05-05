@@ -14,6 +14,11 @@ class ACTIONROGUELIKE_API AC_Character : public ACharacter
 {
 	GENERATED_BODY()
 
+protected:
+	// 指定生成的类型
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
+
 public:
 	// Sets default values for this character's properties
 	AC_Character();
@@ -31,6 +36,7 @@ protected:
 
 	void MoveForward(float X);
 	void MoveRight(float X);
+	void PrimaryAttack();
 
 public:	
 	// Called every frame
