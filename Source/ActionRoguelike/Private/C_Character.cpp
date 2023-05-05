@@ -4,6 +4,7 @@
 #include "C_Character.h"
 
 #include "A_MagicProjectile.h"
+#include "HInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -23,6 +24,8 @@ AC_Character::AC_Character()
 	Camera = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	// 将摄像机组件附加到弹簧臂组件里面
 	Camera->SetupAttachment(SpringArm);
+
+	InteractionComponent = CreateDefaultSubobject<UHInteractionComponent>("InteractionComp");
 
 	// 设置角色的移动方式
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -53,7 +56,7 @@ void AC_Character::MoveRight(float X)
 	ControlRotator.Roll = 0.0f;
 
 	// 获取右向量
-  	FVector RightVector =  FRotationMatrix(ControlRotator).GetScaledAxis(EAxis::Y);
+	FVector RightVector = FRotationMatrix(ControlRotator).GetScaledAxis(EAxis::Y);
 	AddMovementInput(RightVector, X);
 }
 
@@ -68,7 +71,15 @@ void AC_Character::PrimaryAttack()
 	// 设置碰撞处理方式为始终生成
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	UE_LOG(LogTemp, Warning, TEXT("Hand: %s"), *HandLocation.ToString())
-	GetWorld()->SpawnActor<AActor>(ProjectileClass,SpawnTM, SpawnParams);
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+}
+
+void AC_Character::PrimaryInteract()
+{
+	if (InteractionComponent)
+	{
+		InteractionComponent->PrimaryInteract();
+	}
 }
 
 // Called every frame
@@ -89,6 +100,7 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AC_Character::Jump);
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AC_Character::PrimaryAttack);
+
+	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &AC_Character::PrimaryInteract);
 }
 
-  

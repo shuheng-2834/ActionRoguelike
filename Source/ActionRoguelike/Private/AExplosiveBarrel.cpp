@@ -30,7 +30,7 @@ void AAExplosiveBarrel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 void AAExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-
+	// 
 	MeshComp->OnComponentHit.AddDynamic(this, &AAExplosiveBarrel::OnHit);
 }
 
