@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AC_Character::AC_Character()
@@ -83,14 +84,56 @@ void AC_Character::PrimaryAttack_TimeElapsed()
 	// 获取骨架，再获取骨架上炮口的位置
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 
+	//FActorSpawnParameters SpawnParams;
+	//// 设置碰撞处理方式为始终生成
+	//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	//// 设置生成的子弹的对象为当前角色
+	//SpawnParams.Instigator = this;
+
+	FVector Start = Camera->GetComponentLocation();
+	FVector End = Camera->GetComponentRotation().Vector() * 5000.f + Start;
+
+	FHitResult HitResult;
+	FCollisionObjectQueryParams ObjectTypes;
+	ObjectTypes.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectTypes.AddObjectTypesToQuery(ECC_Pawn);
+
+	FCollisionShape Shape;
+	Shape.SetSphere(20.f);
+
+	// 忽视自身
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->SweepSingleByObjectType(HitResult, Start, End, FQuat::Identity, ObjectTypes, Shape, Params);
+	// 绘制Debug追踪线
+	FColor LineColor = bHit ? FColor::Red : FColor::Green;
+	DrawDebugLine(GetWorld(), Start, End, LineColor, false, 1.f, 0, 1.f);
+
+	// 设置生成参数
 	FActorSpawnParameters SpawnParams;
 	// 设置碰撞处理方式为始终生成
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	// 设置生成的子弹的对象为当前角色
 	SpawnParams.Instigator = this;
+	// 配置生成子弹位置及其旋转信息
+	FTransform SpawnTM;
+	FRotator ProjRotator;
 
+	// 如果击中，则通过击中位置来计算旋转，如果没有击中，则通过射线终点来计算旋转
+	if (bHit)
+	{
+		// 获取被击中的物体的位置
+		ProjRotator = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - HandLocation).Rotator();
+	}
+	else
+	{
+		ProjRotator = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
+	}
+	SpawnTM = FTransform(ProjRotator, HandLocation);
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
 
