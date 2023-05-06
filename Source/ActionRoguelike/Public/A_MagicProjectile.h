@@ -8,12 +8,16 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "A_MagicProjectile.generated.h"
 
+class USphereComponent;
+class UProjectileMovementComponent;
+class UParticleSystemComponent;
+
 UCLASS()
 class ACTIONROGUELIKE_API AA_MagicProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AA_MagicProjectile();
 
@@ -21,13 +25,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* SphereComp;
-	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent* MovementComp;
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent* EffectComp;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+		USphereComponent* SphereComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UProjectileMovementComponent* MovementComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UParticleSystemComponent* EffectComp;
 };

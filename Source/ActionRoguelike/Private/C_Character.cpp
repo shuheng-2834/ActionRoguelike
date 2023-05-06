@@ -88,6 +88,9 @@ void AC_Character::PrimaryAttack_TimeElapsed()
 	FActorSpawnParameters SpawnParams;
 	// 设置碰撞处理方式为始终生成
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	// 设置生成的子弹的对象为当前角色
+	SpawnParams.Instigator = this;
+
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
 
@@ -109,7 +112,6 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AC_Character::Jump);
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AC_Character::PrimaryAttack);
-
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &AC_Character::PrimaryInteract);
 }
 
