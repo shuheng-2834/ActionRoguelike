@@ -70,16 +70,26 @@ void AC_Character::PrimaryAttack()
 	// 角色死亡,清空定时器
 	// GetWorldTimerManager().ClearTimer(TimerHandle);
 }
-
-void AC_Character::PrimaryInteract()
+void AC_Character::PrimaryAttack_TimeElapsed()
 {
-	if (InteractionComponent)
-	{
-		InteractionComponent->PrimaryInteract();
-	}
+	Attack(ProjectileClass);
 }
 
-void AC_Character::PrimaryAttack_TimeElapsed()
+void AC_Character::UltimateAttack()
+{
+	// 播放动画
+	PlayAnimMontage(AttackMontage);
+
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AC_Character::UltimateAttack_TimeElapsed, 0.2f);
+	// 角色死亡,清空定时器
+	// GetWorldTimerManager().ClearTimer(TimerHandle);
+}
+void AC_Character::UltimateAttack_TimeElapsed()
+{
+	Attack(UltimateProjectileClass);
+}
+
+void AC_Character::Attack(TSubclassOf<AActor> Projectile)
 {
 	// 获取骨架，再获取骨架上炮口的位置
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
@@ -134,7 +144,15 @@ void AC_Character::PrimaryAttack_TimeElapsed()
 		ProjRotator = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
 	}
 	SpawnTM = FTransform(ProjRotator, HandLocation);
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	GetWorld()->SpawnActor<AActor>(Projectile, SpawnTM, SpawnParams);
+}
+
+void AC_Character::PrimaryInteract()
+{
+	if (InteractionComponent)
+	{
+		InteractionComponent->PrimaryInteract();
+	}
 }
 
 // Called every frame
@@ -156,5 +174,6 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AC_Character::Jump);
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AC_Character::PrimaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &AC_Character::PrimaryInteract);
+	PlayerInputComponent->BindAction("UltimateAttack", IE_Pressed, this, &AC_Character::UltimateAttack);
 }
 
