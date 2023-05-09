@@ -19,10 +19,13 @@ class ACTIONROGUELIKE_API AC_Character : public ACharacter
 protected:
 	// 指定生成的类型
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> MagicProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> UltimateProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+		TSubclassOf<AActor> DashProjectileClass;
 
 	UPROPERTY(EditAnywhere,Category="Attack")
 	UAnimMontage* AttackMontage;
@@ -53,6 +56,8 @@ protected:
 	void PrimaryAttack_TimeElapsed();
 	void UltimateAttack();
 	void UltimateAttack_TimeElapsed();
+	void Dash();
+	void Dash_TimeElapsed();
 	void Attack(TSubclassOf<AActor> Projectile);
 	void PrimaryInteract();
 

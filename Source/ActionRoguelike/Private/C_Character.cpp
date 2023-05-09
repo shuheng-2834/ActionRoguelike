@@ -3,7 +3,6 @@
 
 #include "C_Character.h"
 
-#include "A_MagicProjectile.h"
 #include "HInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -72,7 +71,7 @@ void AC_Character::PrimaryAttack()
 }
 void AC_Character::PrimaryAttack_TimeElapsed()
 {
-	Attack(ProjectileClass);
+	Attack(MagicProjectileClass);
 }
 
 void AC_Character::UltimateAttack()
@@ -89,62 +88,78 @@ void AC_Character::UltimateAttack_TimeElapsed()
 	Attack(UltimateProjectileClass);
 }
 
+void AC_Character::Dash()
+{
+	// 播放动画
+	PlayAnimMontage(AttackMontage);
+
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AC_Character::Dash_TimeElapsed, 0.2f);
+}
+
+void AC_Character::Dash_TimeElapsed()
+{
+	Attack(DashProjectileClass);
+}
+
 void AC_Character::Attack(TSubclassOf<AActor> Projectile)
 {
-	// 获取骨架，再获取骨架上炮口的位置
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-
-	//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-
-	//FActorSpawnParameters SpawnParams;
-	//// 设置碰撞处理方式为始终生成
-	//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	//// 设置生成的子弹的对象为当前角色
-	//SpawnParams.Instigator = this;
-
-	FVector Start = Camera->GetComponentLocation();
-	FVector End = Camera->GetComponentRotation().Vector() * 5000.f + Start;
-
-	FHitResult HitResult;
-	FCollisionObjectQueryParams ObjectTypes;
-	ObjectTypes.AddObjectTypesToQuery(ECC_WorldDynamic);
-	ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic);
-	ObjectTypes.AddObjectTypesToQuery(ECC_Pawn);
-
-	FCollisionShape Shape;
-	Shape.SetSphere(20.f);
-
-	// 忽视自身
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-
-	bool bHit = GetWorld()->SweepSingleByObjectType(HitResult, Start, End, FQuat::Identity, ObjectTypes, Shape, Params);
-	// 绘制Debug追踪线
-	FColor LineColor = bHit ? FColor::Red : FColor::Green;
-	DrawDebugLine(GetWorld(), Start, End, LineColor, false, 1.f, 0, 1.f);
-
-	// 设置生成参数
-	FActorSpawnParameters SpawnParams;
-	// 设置碰撞处理方式为始终生成
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	// 设置生成的子弹的对象为当前角色
-	SpawnParams.Instigator = this;
-	// 配置生成子弹位置及其旋转信息
-	FTransform SpawnTM;
-	FRotator ProjRotator;
-
-	// 如果击中，则通过击中位置来计算旋转，如果没有击中，则通过射线终点来计算旋转
-	if (bHit)
+	if (ensureAlways(Projectile))
 	{
-		// 获取被击中的物体的位置
-		ProjRotator = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - HandLocation).Rotator();
+		// 获取骨架，再获取骨架上炮口的位置
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+		//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+		//FActorSpawnParameters SpawnParams;
+		//// 设置碰撞处理方式为始终生成
+		//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		//// 设置生成的子弹的对象为当前角色
+		//SpawnParams.Instigator = this;
+
+		FVector Start = Camera->GetComponentLocation();
+		FVector End = Camera->GetComponentRotation().Vector() * 5000.f + Start;
+
+		FHitResult HitResult;
+		FCollisionObjectQueryParams ObjectTypes;
+		ObjectTypes.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjectTypes.AddObjectTypesToQuery(ECC_WorldStatic);
+		ObjectTypes.AddObjectTypesToQuery(ECC_Pawn);
+
+		FCollisionShape Shape;
+		Shape.SetSphere(20.f);
+
+		// 忽视自身
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+		bool bHit = GetWorld()->SweepSingleByObjectType(HitResult, Start, End, FQuat::Identity, ObjectTypes, Shape, Params);
+		// 绘制Debug追踪线
+		FColor LineColor = bHit ? FColor::Red : FColor::Green;
+		DrawDebugLine(GetWorld(), Start, End, LineColor, false, 1.f, 0, 1.f);
+
+		// 设置生成参数
+		FActorSpawnParameters SpawnParams;
+		// 设置碰撞处理方式为始终生成
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		// 设置生成的子弹的对象为当前角色
+		SpawnParams.Instigator = this;
+		// 配置生成子弹位置及其旋转信息
+		FTransform SpawnTM;
+		FRotator ProjRotator;
+
+		// 如果击中，则通过击中位置来计算旋转，如果没有击中，则通过射线终点来计算旋转
+		if (bHit)
+		{
+			// 获取被击中的物体的位置
+			ProjRotator = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - HandLocation).Rotator();
+		}
+		else
+		{
+			ProjRotator = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
+		}
+		SpawnTM = FTransform(ProjRotator, HandLocation);
+		GetWorld()->SpawnActor<AActor>(Projectile, SpawnTM, SpawnParams);
 	}
-	else
-	{
-		ProjRotator = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
-	}
-	SpawnTM = FTransform(ProjRotator, HandLocation);
-	GetWorld()->SpawnActor<AActor>(Projectile, SpawnTM, SpawnParams);
 }
 
 void AC_Character::PrimaryInteract()
@@ -175,5 +190,6 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AC_Character::PrimaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &AC_Character::PrimaryInteract);
 	PlayerInputComponent->BindAction("UltimateAttack", IE_Pressed, this, &AC_Character::UltimateAttack);
+	PlayerInputComponent->BindAction("Teleport", IE_Pressed, this, &AC_Character::Dash);
 }
 

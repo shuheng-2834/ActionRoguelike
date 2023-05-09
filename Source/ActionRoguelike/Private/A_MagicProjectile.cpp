@@ -3,17 +3,12 @@
 
 #include "A_MagicProjectile.h"
 
-#include "Components/SphereComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Particles/ParticleSystemComponent.h"
-
 // Sets default values
 AA_MagicProjectile::AA_MagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	/*
 	 * 设置碰撞类型，或者使用在引擎中设置的预设配置类型，二者选其中一种
 	 */
@@ -25,16 +20,6 @@ AA_MagicProjectile::AA_MagicProjectile()
 	//SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
 	// 设置碰撞的响应类型为自定义的碰撞通道Projectile
-	SphereComp->SetCollisionProfileName("Projectile");
-	RootComponent = SphereComp;
-	
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MovementComp->InitialSpeed = 1000.f;
-	MovementComp->bRotationFollowsVelocity = true;
-	MovementComp->bInitialVelocityInLocalSpace = true;
-
-	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(RootComponent);
 	
 }
 
