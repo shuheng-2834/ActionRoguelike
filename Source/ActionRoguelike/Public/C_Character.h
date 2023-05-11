@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UHInteractionComponent;
 class UAnimMontage;
+class UHAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AC_Character : public ACharacter
@@ -19,16 +20,19 @@ class ACTIONROGUELIKE_API AC_Character : public ACharacter
 protected:
 	// 指定生成的类型
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> MagicProjectileClass;
+		TSubclassOf<AActor> MagicProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> UltimateProjectileClass;
+		TSubclassOf<AActor> UltimateProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		TSubclassOf<AActor> DashProjectileClass;
 
-	UPROPERTY(EditAnywhere,Category="Attack")
-	UAnimMontage* AttackMontage;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+		TSubclassOf<UHAttributeComponent> AttributeComponentClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+		UAnimMontage* AttackMontage;
 
 	FTimerHandle TimerHandle;
 
@@ -39,13 +43,16 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArm;
+		USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Camera;
+		UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
-	UHInteractionComponent* InteractionComponent;
+		UHInteractionComponent* InteractionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UHAttributeComponent* AttributeComponent;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -63,7 +70,7 @@ protected:
 
 
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "DrawDebugHelpers.h"
+#include "HAttributeComponent.h"
 
 // Sets default values
 AC_Character::AC_Character()
@@ -26,6 +27,9 @@ AC_Character::AC_Character()
 	Camera->SetupAttachment(SpringArm);
 
 	InteractionComponent = CreateDefaultSubobject<UHInteractionComponent>("InteractionComp");
+
+	// 添加属性组件
+	AttributeComponent = CreateDefaultSubobject<UHAttributeComponent>("AttributeComp");
 
 	// 设置角色的移动方式
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -79,12 +83,15 @@ void AC_Character::UltimateAttack()
 	// 播放动画
 	PlayAnimMontage(AttackMontage);
 
+	UE_LOG(LogTemp, Warning, TEXT("UltimateAttack"));
+
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AC_Character::UltimateAttack_TimeElapsed, 0.2f);
 	// 角色死亡,清空定时器
 	// GetWorldTimerManager().ClearTimer(TimerHandle);
 }
 void AC_Character::UltimateAttack_TimeElapsed()
 {
+	UE_LOG(LogTemp, Warning, TEXT("UltimateAttack Spawn"));
 	Attack(UltimateProjectileClass);
 }
 

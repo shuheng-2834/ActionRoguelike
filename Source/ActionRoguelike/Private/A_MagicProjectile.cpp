@@ -20,7 +20,7 @@ AA_MagicProjectile::AA_MagicProjectile()
 	//SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
 	// 设置碰撞的响应类型为自定义的碰撞通道Projectile
-	
+
 }
 
 // Called when the game starts or when spawned
