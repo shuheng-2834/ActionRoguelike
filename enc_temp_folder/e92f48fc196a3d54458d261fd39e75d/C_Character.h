@@ -51,6 +51,7 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
 		UHAttributeComponent* AttributeComponent;
 
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

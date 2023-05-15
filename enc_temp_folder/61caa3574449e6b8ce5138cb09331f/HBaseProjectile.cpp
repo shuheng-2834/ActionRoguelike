@@ -12,10 +12,10 @@
 void AHBaseProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != GetInstigator())
+	if (OtherActor)
 	{
 		UHAttributeComponent* AttributeCom = Cast<UHAttributeComponent>(OtherActor->GetComponentByClass(UHAttributeComponent::StaticClass()));
-		if (AttributeCom)
+		if(AttributeCom)
 		{
 			AttributeCom->ApplyHealthChange(-20.f);
 			Destroy();

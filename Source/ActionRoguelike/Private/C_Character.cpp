@@ -40,6 +40,7 @@ AC_Character::AC_Character()
 void AC_Character::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AC_Character::MoveForward(float X)

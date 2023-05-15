@@ -30,7 +30,6 @@ void AHDashProjecile::BeginPlay()
 void AHDashProjecile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 

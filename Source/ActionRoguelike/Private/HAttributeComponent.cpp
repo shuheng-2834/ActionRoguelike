@@ -3,16 +3,17 @@
 
 #include "HAttributeComponent.h"
 
-// Sets default values for this component's properties
 UHAttributeComponent::UHAttributeComponent()
 {
 	Health = 100.f;
 }
 
-bool UHAttributeComponent::ApplyHealthChange(float Delat)
+bool UHAttributeComponent::ApplyHealthChange(float Delta)
 {
-	Health += Delat;
-	UE_LOG(LogTemp, Warning, TEXT("Health Changed: %f"), Health);
+	Health += Delta;
+
+	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
+
 	return true;
 
 }

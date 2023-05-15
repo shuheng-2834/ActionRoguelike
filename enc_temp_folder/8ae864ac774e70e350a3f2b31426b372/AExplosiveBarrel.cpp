@@ -3,7 +3,6 @@
 
 #include "AExplosiveBarrel.h"
 
-#include "HAttributeComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -25,15 +24,6 @@ void AAExplosiveBarrel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	FVector NormalImpulse, const FHitResult& Hit)
 {
 	RadialForceComp->FireImpulse();
-
-	if (ensure(OtherActor->GetComponentByClass(UHAttributeComponent::StaticClass())))
-	{
-		UHAttributeComponent* AttributeComp = Cast<UHAttributeComponent>(OtherActor->GetComponentByClass(UHAttributeComponent::StaticClass()));
-		if (AttributeComp)
-		{
-			AttributeComp->ApplyHealthChange(-50.f);
-		}
-	}
 }
 
 // Called when the game starts or when spawned
