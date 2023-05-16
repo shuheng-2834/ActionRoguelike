@@ -19,12 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+		float DamageAmount;
+	UPROPERTY(VisibleAnywhere,Category = "Sound")
+		UAudioComponent* AudioComp;
 
 	UFUNCTION()
 		virtual  void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
-
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-		float DamageAmount;
 
 public:
 	// Called every frame

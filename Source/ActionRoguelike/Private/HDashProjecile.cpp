@@ -58,5 +58,6 @@ void AHDashProjecile::TeleportInstigator()
 	{
 		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(),false,false);
 	}
+	Destroy();
 }
 

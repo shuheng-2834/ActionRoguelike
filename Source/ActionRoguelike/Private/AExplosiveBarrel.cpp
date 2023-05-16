@@ -42,6 +42,8 @@ void AAExplosiveBarrel::BeginPlay()
 	Super::BeginPlay();
 	// 
 	MeshComp->OnComponentHit.AddDynamic(this, &AAExplosiveBarrel::OnHit);
+
+	
 }
 
 // Called every frame

@@ -26,6 +26,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 		UParticleSystem* ImpactVFX;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+		USoundBase* HitSound;
+
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Components")
 		USphereComponent* SphereComp;
 	UPROPERTY(VisibleAnywhere, Category = "Components")

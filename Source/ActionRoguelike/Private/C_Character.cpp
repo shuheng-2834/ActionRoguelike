@@ -189,9 +189,17 @@ void AC_Character::PrimaryInteract()
 void AC_Character::OnHealthChanged(AActor* InstigatorActor, UHAttributeComponent* OwningComp, float NewHealth,
 	float Delta)
 {
-	if(NewHealth <= 0.f && Delta < 0.f)
+	if (Delta < 0.f)
 	{
-		APlayerController* PlayerController =  Cast<APlayerController>(GetController());
+		USkeletalMeshComponent* CurrentSkeletalMesh = Cast<USkeletalMeshComponent>(GetMesh());
+		if(ensure(CurrentSkeletalMesh))
+			CurrentSkeletalMesh->SetScalarParameterValueOnMaterials(TEXT("TimeToHit"), GetWorld()->TimeSeconds);
+	}
+
+
+	if (NewHealth <= 0.f && Delta < 0.f)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 		DisableInput(PlayerController);
 	}
 }

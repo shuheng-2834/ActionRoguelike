@@ -4,6 +4,7 @@
 #include "A_MagicProjectile.h"
 
 #include "HAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -27,6 +28,8 @@ AA_MagicProjectile::AA_MagicProjectile()
 	SphereComp->SetSphereRadius(20.f);
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AA_MagicProjectile::OnActorOverlap);
 
+	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
+
 	DamageAmount = 20.f;
 
 } 
@@ -49,6 +52,9 @@ void AA_MagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent
 void AA_MagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetLifeSpan(30.f);
+	AudioComp->Play();
 }
 
 // Called every frame

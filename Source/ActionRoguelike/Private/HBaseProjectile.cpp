@@ -3,7 +3,7 @@
 
 #include "HBaseProjectile.h"
 
-#include "HAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -59,6 +59,9 @@ void AHBaseProjectile::Explode_Implementation()
 	{
 		// UGameplayStatics 是一个静态类，用于提供一些通用的游戏功能接口，如生成特效等。这里的 SpawnEmitterAtLocation 函数用于在给定位置生成一个粒子特效，并返回生成的特效对象。
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+
+		UGameplayStatics::SpawnSoundAtLocation(this, HitSound, GetActorLocation());
+
 		Destroy();
 	}
 }

@@ -20,6 +20,7 @@ AHTargetDummyActor::AHTargetDummyActor()
 
 void AHTargetDummyActor::OnHealthChanged(AActor* InstigatorActor, UHAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
+	// 当变化值为负数的时候，这说明是攻击
 	if(Delta < 0.0f)
 	{
 		MeshComponent->SetScalarParameterValueOnMaterials(TEXT("TimeToHit"), GetWorld()->TimeSeconds);
