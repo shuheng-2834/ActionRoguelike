@@ -65,7 +65,10 @@ protected:
 	void Attack(TSubclassOf<AActor> Projectile);
 	void PrimaryInteract();
 
+	UFUNCTION()
+		void OnHealthChanged(AActor* InstigatorActor, UHAttributeComponent* OwningComp, float NewHealth, float Delta);
 
+	virtual void PostInitializeComponents() override;
 
 public:
 	// Called every frame

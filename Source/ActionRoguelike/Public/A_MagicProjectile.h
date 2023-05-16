@@ -19,6 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+	UFUNCTION()
+		virtual  void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+		float DamageAmount;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

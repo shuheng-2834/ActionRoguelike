@@ -9,19 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
-void AHBaseProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor && OtherActor != GetInstigator())
-	{
-		UHAttributeComponent* AttributeCom = Cast<UHAttributeComponent>(OtherActor->GetComponentByClass(UHAttributeComponent::StaticClass()));
-		if (AttributeCom)
-		{
-			AttributeCom->ApplyHealthChange(-20.f);
-			Destroy();
-		}
-	}
-}
+
 
 // Sets default values
 AHBaseProjectile::AHBaseProjectile()
@@ -32,7 +20,6 @@ AHBaseProjectile::AHBaseProjectile()
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	SphereComp->SetCollisionProfileName("Projectile");
 	SphereComp->OnComponentHit.AddDynamic(this, &AHBaseProjectile::OnActorHit);
-	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AHBaseProjectile::OnActorOverlap);
 	RootComponent = SphereComp;
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");

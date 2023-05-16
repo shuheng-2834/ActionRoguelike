@@ -36,9 +36,6 @@ protected:
 	UFUNCTION()
 		virtual void OnActorHit(UPrimitiveComponent* HitComponent,AActor* OtherActor,UPrimitiveComponent* OtherCom,FVector NormalImpulse,const FHitResult& Hit);
 
-	UFUNCTION()
-		virtual  void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
-
 	// BlueprintNativeEvent 在c++中进行基础实现，然后可以在蓝图中扩展
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 		void Explode();

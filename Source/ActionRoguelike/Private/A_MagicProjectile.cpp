@@ -3,6 +3,9 @@
 
 #include "A_MagicProjectile.h"
 
+#include "HAttributeComponent.h"
+#include "Components/SphereComponent.h"
+
 // Sets default values
 AA_MagicProjectile::AA_MagicProjectile()
 {
@@ -21,6 +24,25 @@ AA_MagicProjectile::AA_MagicProjectile()
 
 	// 设置碰撞的响应类型为自定义的碰撞通道Projectile
 
+	SphereComp->SetSphereRadius(20.f);
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AA_MagicProjectile::OnActorOverlap);
+
+	DamageAmount = 20.f;
+
+} 
+
+void AA_MagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != GetInstigator())
+	{
+		UHAttributeComponent* AttributeCom = Cast<UHAttributeComponent>(OtherActor->GetComponentByClass(UHAttributeComponent::StaticClass()));
+		if (AttributeCom)
+		{
+			AttributeCom->ApplyHealthChange(-DamageAmount);
+			Destroy();
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +54,7 @@ void AA_MagicProjectile::BeginPlay()
 // Called every frame
 void AA_MagicProjectile::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime); 
 	// 打印位置
 }
 

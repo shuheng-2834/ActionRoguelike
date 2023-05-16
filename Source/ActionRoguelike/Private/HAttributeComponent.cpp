@@ -8,6 +8,11 @@ UHAttributeComponent::UHAttributeComponent()
 	Health = 100.f;
 }
 
+bool UHAttributeComponent::IsAlive() const
+{
+	return Health > 0.f;
+}
+
 bool UHAttributeComponent::ApplyHealthChange(float Delta)
 {
 	Health += Delta;
