@@ -11,6 +11,8 @@ class USpringArmComponent;
 class UHInteractionComponent;
 class UAnimMontage;
 class UHAttributeComponent;
+class UAudioComponent;
+class USoundBase;
 
 UCLASS()
 class ACTIONROGUELIKE_API AC_Character : public ACharacter
@@ -30,6 +32,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+		UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere,Category= "Audio")
+		UAudioComponent* AudioComp;
+	UPROPERTY(EditAnywhere,Category = "Audio")
+		USoundBase* PrimaryAttackSound;
 
 	FTimerHandle TimerHandle;
 

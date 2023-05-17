@@ -9,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "DrawDebugHelpers.h"
 #include "HAttributeComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AC_Character::AC_Character()
@@ -30,6 +32,9 @@ AC_Character::AC_Character()
 
 	// 添加属性组件
 	AttributeComponent = CreateDefaultSubobject<UHAttributeComponent>("AttributeComp");
+
+	// 添加音频组件
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
 
 	// 设置角色的移动方式
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -123,6 +128,10 @@ void AC_Character::Attack(TSubclassOf<AActor> Projectile)
 	{
 		// 获取骨架，再获取骨架上炮口的位置
 		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+		UGameplayStatics::SpawnEmitterAtLocation(this, MuzzleFlash, HandLocation);
+		UGameplayStatics::SpawnSoundAtLocation(this, PrimaryAttackSound, HandLocation);
+
 
 		//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 

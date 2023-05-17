@@ -3,7 +3,6 @@
 
 #include "HBaseProjectile.h"
 
-#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,6 +29,10 @@ AHBaseProjectile::AHBaseProjectile()
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(RootComponent);
+
+	ShakeInnerRadius = 0.f;
+	ShakeOuterRadius = 1500.f;
+
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +64,9 @@ void AHBaseProjectile::Explode_Implementation()
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 
 		UGameplayStatics::SpawnSoundAtLocation(this, HitSound, GetActorLocation());
+
+		// 生成一个摄像机抖动
+		UGameplayStatics::PlayWorldCameraShake(this, ImpactShake,GetActorLocation(),ShakeInnerRadius,ShakeOuterRadius);
 
 		Destroy();
 	}

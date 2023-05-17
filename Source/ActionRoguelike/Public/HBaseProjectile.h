@@ -9,6 +9,7 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
+class UCameraShakeBase;
 
 UCLASS(Abstract)
 class ACTIONROGUELIKE_API AHBaseProjectile : public AActor
@@ -29,16 +30,24 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")
 		USoundBase* HitSound;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+		TSubclassOf<UCameraShakeBase> ImpactShake;
+	UPROPERTY(EditAnywhere,Category = "Camera")
+		float ShakeInnerRadius;
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		float ShakeOuterRadius;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Components")
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		USphereComponent* SphereComp;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UProjectileMovementComponent* MovementComp;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UParticleSystemComponent* EffectComp;
 
+
 	UFUNCTION()
-		virtual void OnActorHit(UPrimitiveComponent* HitComponent,AActor* OtherActor,UPrimitiveComponent* OtherCom,FVector NormalImpulse,const FHitResult& Hit);
+		virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherCom, FVector NormalImpulse, const FHitResult& Hit);
 
 	// BlueprintNativeEvent 在c++中进行基础实现，然后可以在蓝图中扩展
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
