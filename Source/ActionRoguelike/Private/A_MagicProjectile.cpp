@@ -34,8 +34,7 @@ AA_MagicProjectile::AA_MagicProjectile()
 
 } 
 
-void AA_MagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
+void AA_MagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
@@ -43,7 +42,7 @@ void AA_MagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent
 		if (AttributeCom)
 		{
 			AttributeCom->ApplyHealthChange(-DamageAmount);
-			Destroy();
+			Explode();
 		}
 	}
 }
@@ -53,6 +52,7 @@ void AA_MagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// 设置生命周期，30秒之后自动销毁
 	SetLifeSpan(30.f);
 	AudioComp->Play();
 }

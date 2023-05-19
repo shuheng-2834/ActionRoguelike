@@ -46,7 +46,7 @@ protected:
 		UParticleSystemComponent* EffectComp;
 
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherCom, FVector NormalImpulse, const FHitResult& Hit);
 
 	// BlueprintNativeEvent 在c++中进行基础实现，然后可以在蓝图中扩展

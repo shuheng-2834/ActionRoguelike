@@ -21,11 +21,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 		float DamageAmount;
-	UPROPERTY(VisibleAnywhere,Category = "Sound")
+	UPROPERTY(VisibleAnywhere, Category = "Sound")
 		UAudioComponent* AudioComp;
 
 	UFUNCTION()
-		virtual  void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
+	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 
 public:
 	// Called every frame
