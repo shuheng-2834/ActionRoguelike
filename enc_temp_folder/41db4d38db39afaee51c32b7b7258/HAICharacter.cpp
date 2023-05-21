@@ -33,7 +33,7 @@ void AHAICharacter::OnPawnSeen(APawn* SeenPawn)
 		// 设置黑板中的目标对象
 		AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), SeenPawn);
 
-		//DrawDebugString(GetWorld(),GetActorLocation(),TEXT("PLAYER SPOTTED"),nullptr,FColor::White);
+		DrawDebugString(GetWorld(),GetActorLocation(),TEXT("PLAYER SPOTTED"),nullptr,FColor::White);
 
 		// 设置黑板中的目标位置
 		AIController->GetBlackboardComponent()->SetValueAsVector(TEXT("MoveToLocation"), SeenPawn->GetActorLocation()); 
